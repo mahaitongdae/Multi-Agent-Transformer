@@ -85,11 +85,17 @@ class FootballRunner(Runner):
 
                 if len(done_episodes_rewards) > 0:
                     aver_episode_rewards = np.mean(done_episodes_rewards)
-                    self.writter.add_scalars("train_episode_rewards", {"aver_rewards": aver_episode_rewards}, total_num_steps)
+                    if self.use_wandb:
+                        wandb.log({"train_episode_rewards": aver_episode_rewards}, step=total_num_steps)
+                    else:
+                        self.writter.add_scalars("train_episode_rewards", {"aver_rewards": aver_episode_rewards}, total_num_steps)
                     done_episodes_rewards = []
 
                     aver_episode_scores = np.mean(done_episodes_scores)
-                    self.writter.add_scalars("train_episode_scores", {"aver_scores": aver_episode_scores}, total_num_steps)
+                    if self.use_wandb:
+                        wandb.log({"train_episode_scores": aver_episode_scores}, step=total_num_steps)
+                    else:
+                        self.writter.add_scalars("train_episode_scores", {"aver_scores": aver_episode_scores}, total_num_steps)
                     done_episodes_scores = []
                     print("some episodes done, average rewards: {}, scores: {}"
                           .format(aver_episode_rewards, aver_episode_scores))
